@@ -1,3 +1,5 @@
+from typing import Dict
+
 from pydantic import BaseModel, Field
 
 
@@ -7,6 +9,8 @@ class SolveRequest(BaseModel):
         ...,
         min_length=1
     )
+
+    parameters: Dict[str, float] = {}
 
     x0: float
 

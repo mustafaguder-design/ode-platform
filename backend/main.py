@@ -22,7 +22,8 @@ def solve(data: SolveRequest):
     try:
 
         function = EquationParser.parse(
-            data.equation
+            data.equation,
+            data.parameters
         )
 
         method = data.method.lower()
@@ -40,6 +41,7 @@ def solve(data: SolveRequest):
             return {
                 "method": "euler",
                 "equation": data.equation,
+                "parameters": data.parameters,
                 "result": result
             }
 
@@ -56,6 +58,7 @@ def solve(data: SolveRequest):
             return {
                 "method": "rk4",
                 "equation": data.equation,
+                "parameters": data.parameters,
                 "result": result
             }
 
@@ -80,6 +83,7 @@ def solve(data: SolveRequest):
             return {
                 "method": "compare",
                 "equation": data.equation,
+                "parameters": data.parameters,
                 "euler": euler_result,
                 "rk4": rk4_result
             }
