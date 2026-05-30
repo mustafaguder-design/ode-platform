@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException
 
 from backend.models.solve_request import SolveRequest
+from backend.services.solver_service import SolverService
+
 from backend.parser.equation_parser import EquationParser
 
 from backend.solvers.euler_solver import EulerSolver
@@ -21,79 +23,7 @@ def solve(data: SolveRequest):
 
     try:
 
-        function = EquationParser.parse(
-            data.equation,
-            data.parameters
-        )
-
-        method = data.method.lower()
-
-        if method == "euler":
-
-            result = EulerSolver.solve(
-                function=function,
-                x0=data.x0,
-                y0=data.y0,
-                h=data.h,
-                x_end=data.x_end
-            )
-
-            return {
-                "method": "euler",
-                "equation": data.equation,
-                "parameters": data.parameters,
-                "result": result
-            }
-
-        elif method == "rk4":
-
-            result = RK4Solver.solve(
-                function=function,
-                x0=data.x0,
-                y0=data.y0,
-                h=data.h,
-                x_end=data.x_end
-            )
-
-            return {
-                "method": "rk4",
-                "equation": data.equation,
-                "parameters": data.parameters,
-                "result": result
-            }
-
-        elif method == "compare":
-
-            euler_result = EulerSolver.solve(
-                function=function,
-                x0=data.x0,
-                y0=data.y0,
-                h=data.h,
-                x_end=data.x_end
-            )
-
-            rk4_result = RK4Solver.solve(
-                function=function,
-                x0=data.x0,
-                y0=data.y0,
-                h=data.h,
-                x_end=data.x_end
-            )
-
-            return {
-                "method": "compare",
-                "equation": data.equation,
-                "parameters": data.parameters,
-                "euler": euler_result,
-                "rk4": rk4_result
-            }
-
-        else:
-
-            raise HTTPException(
-                status_code=400,
-                detail="Invalid method. Use euler, rk4 or compare."
-            )
+        return SolverService.solve(data)
 
     except Exception as e:
 
