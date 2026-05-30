@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from backend.models.solve_request import SolveRequest
 from backend.parser.equation_parser import EquationParser
+
 from backend.solvers.euler_solver import EulerSolver
+from backend.solvers.rk4_solver import RK4Solver
 
 app = FastAPI()
 
@@ -17,15 +19,51 @@ def root():
 @app.post("/solve")
 def solve(data: SolveRequest):
 
-    return {
-        "status": "success",
-        "equation": data.equation,
-        "x0": data.x0,
-        "y0": data.y0,
-        "h": data.h,
-        "x_end": data.x_end,
-        "method": data.method
-    }
+    try:
+
+        function = EquationParser.parse(
+            data.equation
+        )
+
+        if data.method.lower() == "euler":
+
+            result = EulerSolver.solve(
+                function=function,
+                x0=data.x0,
+                y0=data.y0,
+                h=data.h,
+                x_end=data.x_end
+            )
+
+        elif data.method.lower() == "rk4":
+
+            result = RK4Solver.solve(
+                function=function,
+                x0=data.x0,
+                y0=data.y0,
+                h=data.h,
+                x_end=data.x_end
+            )
+
+        else:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid method. Use 'euler' or 'rk4'."
+            )
+
+        return {
+            "method": data.method,
+            "equation": data.equation,
+            "result": result
+        }
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 
 
 @app.get("/test-parser")
@@ -45,7 +83,7 @@ def test_euler():
 
     f = EquationParser.parse("x+y")
 
-    result = EulerSolver.solve(
+    return EulerSolver.solve(
         function=f,
         x0=0,
         y0=1,
@@ -53,4 +91,16 @@ def test_euler():
         x_end=1
     )
 
-    return result
+
+@app.get("/test-rk4")
+def test_rk4():
+
+    f = EquationParser.parse("x+y")
+
+    return RK4Solver.solve(
+        function=f,
+        x0=0,
+        y0=1,
+        h=0.1,
+        x_end=1
+    )
