@@ -25,7 +25,9 @@ def solve(data: SolveRequest):
             data.equation
         )
 
-        if data.method.lower() == "euler":
+        method = data.method.lower()
+
+        if method == "euler":
 
             result = EulerSolver.solve(
                 function=function,
@@ -35,7 +37,13 @@ def solve(data: SolveRequest):
                 x_end=data.x_end
             )
 
-        elif data.method.lower() == "rk4":
+            return {
+                "method": "euler",
+                "equation": data.equation,
+                "result": result
+            }
+
+        elif method == "rk4":
 
             result = RK4Solver.solve(
                 function=function,
@@ -45,18 +53,43 @@ def solve(data: SolveRequest):
                 x_end=data.x_end
             )
 
+            return {
+                "method": "rk4",
+                "equation": data.equation,
+                "result": result
+            }
+
+        elif method == "compare":
+
+            euler_result = EulerSolver.solve(
+                function=function,
+                x0=data.x0,
+                y0=data.y0,
+                h=data.h,
+                x_end=data.x_end
+            )
+
+            rk4_result = RK4Solver.solve(
+                function=function,
+                x0=data.x0,
+                y0=data.y0,
+                h=data.h,
+                x_end=data.x_end
+            )
+
+            return {
+                "method": "compare",
+                "equation": data.equation,
+                "euler": euler_result,
+                "rk4": rk4_result
+            }
+
         else:
 
             raise HTTPException(
                 status_code=400,
-                detail="Invalid method. Use 'euler' or 'rk4'."
+                detail="Invalid method. Use euler, rk4 or compare."
             )
-
-        return {
-            "method": data.method,
-            "equation": data.equation,
-            "result": result
-        }
 
     except Exception as e:
 

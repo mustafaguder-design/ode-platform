@@ -1,10 +1,25 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class SolveRequest(BaseModel):
-    equation: str
+
+    equation: str = Field(
+        ...,
+        min_length=1
+    )
+
     x0: float
+
     y0: float
-    h: float
+
+    h: float = Field(
+        ...,
+        gt=0
+    )
+
     x_end: float
-    method: str
+
+    method: str = Field(
+        ...,
+        min_length=1
+    )

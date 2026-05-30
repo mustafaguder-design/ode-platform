@@ -6,8 +6,12 @@ class RK4Solver:
         x_values = []
         y_values = []
 
+        steps = []
+
         x = x0
         y = y0
+
+        step_number = 1
 
         while x <= x_end:
 
@@ -31,16 +35,33 @@ class RK4Solver:
                 y + h * k3
             )
 
-            y = y + (h / 6) * (
+            next_y = y + (h / 6) * (
                 k1 +
                 2 * k2 +
                 2 * k3 +
                 k4
             )
 
+            steps.append(
+                {
+                    "step": step_number,
+                    "x": round(x, 6),
+                    "y": round(y, 6),
+                    "k1": round(float(k1), 6),
+                    "k2": round(float(k2), 6),
+                    "k3": round(float(k3), 6),
+                    "k4": round(float(k4), 6),
+                    "next_y": round(float(next_y), 6)
+                }
+            )
+
+            y = next_y
             x = x + h
+
+            step_number += 1
 
         return {
             "x_values": x_values,
-            "y_values": y_values
+            "y_values": y_values,
+            "steps": steps
         }
