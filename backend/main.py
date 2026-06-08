@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.models.solve_request import SolveRequest
 from backend.services.solver_service import SolverService
@@ -9,6 +10,13 @@ from backend.solvers.euler_solver import EulerSolver
 from backend.solvers.rk4_solver import RK4Solver
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
