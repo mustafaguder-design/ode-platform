@@ -1,7 +1,7 @@
-from backend.parser.equation_parser import EquationParser
+from parser.equation_parser import EquationParser
 
-from backend.solvers.euler_solver import EulerSolver
-from backend.solvers.rk4_solver import RK4Solver
+from solvers.euler_solver import EulerSolver
+from solvers.rk4_solver import RK4Solver
 
 
 class SolverService:
