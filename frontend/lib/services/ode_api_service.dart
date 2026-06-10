@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class OdeApiService {
   static const String baseUrl =
-      'http://127.0.0.1:8000';
+      'https://ode-platform-30v6.onrender.com';
 
   Future<Map<String, dynamic>> solve({
     required String equation,
