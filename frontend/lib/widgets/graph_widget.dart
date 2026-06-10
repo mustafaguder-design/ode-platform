@@ -2,44 +2,33 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class GraphWidget extends StatelessWidget {
-  const GraphWidget({super.key});
+  final List<dynamic> xValues;
+  final List<dynamic> yValues;
+
+  const GraphWidget({
+    super.key,
+    required this.xValues,
+    required this.yValues,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final spots = List.generate(
+      xValues.length,
+      (index) => FlSpot(
+        (xValues[index] as num).toDouble(),
+        (yValues[index] as num).toDouble(),
+      ),
+    );
+
     return LineChart(
       LineChartData(
         gridData: const FlGridData(show: true),
-
-        titlesData: const FlTitlesData(
-          show: true,
-        ),
-
-        borderData: FlBorderData(
-          show: true,
-        ),
-
+        borderData: FlBorderData(show: true),
+        titlesData: const FlTitlesData(show: true),
         lineBarsData: [
           LineChartBarData(
-            spots: const [
-              FlSpot(0, 1),
-              FlSpot(1, 2),
-              FlSpot(2, 3),
-              FlSpot(3, 4),
-              FlSpot(4, 4.5),
-            ],
-            isCurved: true,
-            barWidth: 4,
-            dotData: const FlDotData(show: true),
-          ),
-
-          LineChartBarData(
-            spots: const [
-              FlSpot(0, 1),
-              FlSpot(1, 1.8),
-              FlSpot(2, 2.9),
-              FlSpot(3, 4.2),
-              FlSpot(4, 5),
-            ],
+            spots: spots,
             isCurved: true,
             barWidth: 4,
             dotData: const FlDotData(show: true),
