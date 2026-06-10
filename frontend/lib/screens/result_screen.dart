@@ -13,7 +13,10 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
   final Map<String, dynamic> solution =
-    result['result'] ?? {};
+    result['rk4'] ??
+    result['euler'] ??
+    result['result'] ??
+    {};
 
 final List<dynamic> xValues =
     solution['x_values'] ?? [];
